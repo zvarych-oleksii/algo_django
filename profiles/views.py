@@ -88,3 +88,7 @@ class UserProfileListView(GenericAPIView):
 class DeleteUserView(DestroyAPIView):
     queryset = User.objects.all()
     permission_classes = [IsStaffUser]
+
+    def get_object(self):
+        user_id = self.kwargs['user_id']
+        return User.objects.get(id=user_id)

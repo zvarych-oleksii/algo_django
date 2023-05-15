@@ -17,5 +17,5 @@ urlpatterns = [
     path('all/', UserProfileListView.as_view(), name='list_all_users'),
     path('self/', SelfUserProfileView.as_view(), name='list_all_users'),
     path('self-update/', UpdateSelfUserView.as_view(), name='list_all_users'),
-    path('delete/', DeleteUserView.as_view(), name='delete-user'),
+    path('delete/<int:user_id>', DeleteUserView.as_view(), name='delete-user'),
 ]
