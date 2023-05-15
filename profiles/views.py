@@ -1,6 +1,6 @@
 from rest_framework.generics import (
     GenericAPIView,
-    UpdateAPIView
+    UpdateAPIView, DestroyAPIView
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -30,6 +30,7 @@ class RegisterView(GenericAPIView):
 class UpdateSelfUserView(UpdateAPIView):
     serializer_class = UpdateUserInformation
     permission_classes = [IsAuthenticated]
+
     def get_object(self):
         return self.request.user
 
@@ -82,3 +83,8 @@ class UserProfileListView(GenericAPIView):
         instances = self.get_queryset()
         serializer = self.get_serializer(instances, many=True)
         return Response(serializer.data)
+
+
+class DeleteUserView(DestroyAPIView):
+    queryset = User.objects.all()
+    permission_classes = [IsStaffUser]

@@ -6,7 +6,7 @@ from .views import (
     UserProfileDetailViewById,
     SelfUserProfileView,
     UserProfileListView,
-
+    DeleteUserView
 )
 
 
@@ -16,5 +16,6 @@ urlpatterns = [
     path('get/<int:user_id>', UserProfileDetailViewById.as_view(), name='detail_user_by_id'),
     path('all/', UserProfileListView.as_view(), name='list_all_users'),
     path('self/', SelfUserProfileView.as_view(), name='list_all_users'),
-    path('self-update/', UpdateSelfUserView.as_view(), name='list_all_users')
+    path('self-update/', UpdateSelfUserView.as_view(), name='list_all_users'),
+    path('delete/', DeleteUserView.as_view(), name='delete-user'),
 ]
