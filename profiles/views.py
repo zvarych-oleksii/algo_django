@@ -2,8 +2,11 @@ from rest_framework.generics import (
     GenericAPIView,
     UpdateAPIView
 )
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+
+from .permission import IsStaffUser
 from .serializers import (
     UserSerializer,
     RegisterUser,
@@ -26,7 +29,7 @@ class RegisterView(GenericAPIView):
 
 class UpdateSelfUserView(UpdateAPIView):
     serializer_class = UpdateUserInformation
-
+    permission_classes = [IsAuthenticated]
     def get_object(self):
         return self.request.user
 
@@ -34,6 +37,7 @@ class UpdateSelfUserView(UpdateAPIView):
 class UpdateUserByIdView(UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UpdateUserInformation
+    permission_classes = [IsStaffUser]
 
     def get_object(self):
         user_id = self.kwargs['user_id']
@@ -41,7 +45,7 @@ class UpdateUserByIdView(UpdateAPIView):
 
 
 class SelfUserProfileView(GenericAPIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -55,7 +59,7 @@ class SelfUserProfileView(GenericAPIView):
 
 
 class UserProfileDetailViewById(GenericAPIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -70,7 +74,7 @@ class UserProfileDetailViewById(GenericAPIView):
 
 
 class UserProfileListView(GenericAPIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
