@@ -11,4 +11,4 @@ importlib-metadata==6.6.0
 Markdown==3.4.3
 PyJWT==2.7.0
 zipp==3.15.0
-
+python-dotenv~=1.0.0

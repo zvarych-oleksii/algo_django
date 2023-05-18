@@ -2,6 +2,7 @@ from rest_framework.generics import (
     GenericAPIView,
     UpdateAPIView, DestroyAPIView
 )
+from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth.models import User
@@ -27,25 +28,7 @@ class RegisterView(GenericAPIView):
         })
 
 
-class UpdateSelfUserView(UpdateAPIView):
-    serializer_class = UpdateUserInformation
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user
-
-
-class UpdateUserByIdView(UpdateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UpdateUserInformation
-    permission_classes = [IsStaffUser]
-
-    def get_object(self):
-        user_id = self.kwargs['user_id']
-        return User.objects.get(id=user_id)
-
-
-class SelfUserProfileView(GenericAPIView):
+class UpdateSelfUserProfileView(GenericAPIView, UpdateModelMixin):
     permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -57,6 +40,24 @@ class SelfUserProfileView(GenericAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+    def patch(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+
+class UpdateUserByIdView(UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UpdateUserInformation
+    permission_classes = [IsStaffUser]
+
+    def get_object(self):
+        user_id = self.kwargs['user_id']
+        return User.objects.get(id=user_id)
 
 
 class UserProfileDetailViewById(GenericAPIView):

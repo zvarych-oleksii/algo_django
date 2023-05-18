@@ -24,9 +24,11 @@ class UpdateUserInformation(serializers.ModelSerializer):
         fields = ('id', 'username', 'password')
         extra_kwargs = {
             'username': {'write_only': True},
+            'password': {'write_only': True}
         }
 
     def update(self, instance, validated_data):
+        instance.set_password(validated_data.get('password', instance.password))
         instance.username = validated_data.get('username', instance.username)
         instance.save()
         return instance
